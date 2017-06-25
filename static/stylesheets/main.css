@@ -21,20 +21,55 @@ body {
     color: #333;
 }
 
+h2 {
+    margin-top: 1rem;
+    font-size: 1em;
+    text-transform: uppercase;
+}
+
 canvas {
     display: block;
-    border: 1px solid red;
+    margin: 5rem 0;
 }
 
 div {
     display: flex;
-    border: 1px solid red;
 }
 
 button {
     display: block;
-    width: 2.4rem;
-    height: 2.4rem;
-    border: 1px solid blue;
+    width: 3.2rem;
+    height: 3.2rem;
+    border: none;
+    margin: 0 1rem;
+    background: #ad1457 center center no-repeat;
+    background-size: 60%;
     border-radius: 50%;
+    cursor: pointer;
+    will-change: transform;
+}
+
+button:hover,
+button:focus {
+    transform: scale(1.15);
+}
+
+button:active {
+    transform: scale(0.9);
+}
+
+button.prev {
+    background-image: url("../images/previous.png");
+}
+
+button.next {
+    background-image: url("../images/next.png");
+}
+
+button.play {
+    background-image: url("../images/play.png");
+}
+
+button.pause {
+    background-image: url("../images/pause.png");
 }
