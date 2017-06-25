@@ -73,3 +73,7 @@ button.play {
 button.pause {
     background-image: url("../images/pause.png");
 }
+
+.fake-canvas {
+    display: none;
+}

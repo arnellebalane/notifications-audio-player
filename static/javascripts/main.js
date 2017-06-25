@@ -125,6 +125,8 @@ canvasCtx.lineCap = 'round';
 // Notifications Integration
 // Using `var` here so that the variables get hoisted.
 var registration;
+var fakeCanvas;
+var fakeCanvasCtx;
 var notificationsGranted = false;
 
 navigator.permissions.query({ name: 'notifications' }).then((status) => {
@@ -141,6 +143,14 @@ navigator.permissions.query({ name: 'notifications' }).then((status) => {
 
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js').then((r) => registration = r);
+
+    // Create fake square canvas for notification icon.
+    fakeCanvas = document.createElement('canvas');
+    fakeCanvas.width = 200;
+    fakeCanvas.height = 200;
+    fakeCanvas.classList.add('fake-canvas');
+    document.body.appendChild(fakeCanvas);
+    fakeCanvasCtx = fakeCanvas.getContext('2d');
 }
 
 function notify() {
@@ -152,11 +162,25 @@ function notify() {
     const currentTime = formatTime(audio.currentTime);
     const options = {
         body: `[${currentTime}] ${data.artist}`,
-        icon: canvas.toDataURL('image/png'),
+        icon: getNotificationIcon(),
         requireInteraction: true,
         tag: 'notification-audio-player'
     };
     registration.showNotification(title, options);
+}
+
+function getNotificationIcon() {
+    // We want the notification icon to be square to maximize the use of the
+    // space, and since the rendered canvas is a rectangle, we just obtain a
+    // square portion from it.
+    const imageData = canvasCtx.getImageData(
+        canvas.width / 2 - fakeCanvas.width / 2,
+        canvas.height / 2 - fakeCanvas.height / 2,
+        fakeCanvas.width,
+        fakeCanvas.height
+    );
+    fakeCanvasCtx.putImageData(imageData, 0, 0);
+    return fakeCanvas.toDataURL('image/png');
 }
 
 function formatTime(time) {
