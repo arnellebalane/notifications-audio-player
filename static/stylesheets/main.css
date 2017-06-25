@@ -1,0 +1,40 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+}
+
+html {
+    font-size: 62.5%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: "Quicksand", sans-serif;
+    font-size: 1.6em;
+    font-weight: 300;
+    color: #333;
+}
+
+canvas {
+    display: block;
+    border: 1px solid red;
+}
+
+div {
+    display: flex;
+    border: 1px solid red;
+}
+
+button {
+    display: block;
+    width: 2.4rem;
+    height: 2.4rem;
+    border: 1px solid blue;
+    border-radius: 50%;
+}
