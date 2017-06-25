@@ -72,3 +72,49 @@ document.addEventListener('click', (e) => {
         actions[action]();
     }
 });
+
+
+
+// Audio Visualization
+const canvas = document.querySelector('canvas');
+const canvasCtx = canvas.getContext('2d');
+
+const audioCtx = new AudioContext();
+const source = audioCtx.createMediaElementSource(audio);
+const analyser = audioCtx.createAnalyser();
+source.connect(analyser);
+analyser.connect(audioCtx.destination);
+
+const audioData = new Float32Array(analyser.frequencyBinCount);
+
+const linesCount = 100;
+const indexInterval = Math.floor(audioData.length / linesCount);
+const lineInterval = canvas.width / linesCount;
+const maxLength = canvas.height / 2;
+
+canvasCtx.strokeStyle = '#ad1457';
+canvasCtx.lineWidth = 3;
+canvasCtx.lineCap = 'round';
+
+(function visualize() {
+    requestAnimationFrame(visualize);
+    if (audio.paused) {
+        return null;
+    }
+
+    analyser.getFloatTimeDomainData(audioData);
+
+    canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
+    canvasCtx.beginPath();
+
+    for (let i = 0; i < linesCount; i++) {
+        const data = audioData[i * indexInterval];
+        const x = lineInterval * i + lineInterval / 2;
+        const y1 = maxLength - maxLength * data;
+        const y2 = maxLength + maxLength * data;
+        canvasCtx.moveTo(x, y1);
+        canvasCtx.lineTo(x, y2);
+    }
+
+    canvasCtx.stroke();
+})();
