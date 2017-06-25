@@ -58,7 +58,7 @@ button:active {
     transform: scale(0.9);
 }
 
-button.prev {
+button.previous {
     background-image: url("../images/previous.png");
 }
 
