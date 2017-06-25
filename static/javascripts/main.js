@@ -6,6 +6,14 @@ const playlist = [{
     title: 'Coming Up Roses',
     artist: 'Keira Knightley',
     src: 'static/audios/coming-up-roses.mp3'
+}, {
+    title: 'Lost Stars',
+    artist: 'Adam Levine',
+    src: 'static/audios/lost-stars.mp3'
+}, {
+    title: 'Tell Me If You Wanna Go Home',
+    artist: 'Keira Knightley, Hailee Steinfield',
+    src: 'static/audios/tell-me-if-you-wanna-go-home.mp3'
 }];
 let index = 0;
 
