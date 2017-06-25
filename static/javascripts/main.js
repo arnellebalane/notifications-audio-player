@@ -161,7 +161,7 @@ function notify() {
     const title = data.title;
     const currentTime = formatTime(audio.currentTime);
     const options = {
-        body: `[${currentTime}] ${data.artist}`,
+        body: `(${currentTime}) ${data.artist}`,
         icon: getNotificationIcon(),
         requireInteraction: true,
         tag: 'notification-audio-player'
