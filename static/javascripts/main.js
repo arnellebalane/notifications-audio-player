@@ -172,10 +172,15 @@ function notify() {
         icon: getNotificationIcon(),
         requireInteraction: true,
         tag: 'notifications-audio-player',
-        actions: [
-            { action: audio.paused ? 'play' : 'pause', title: audio.paused ? 'Play' : 'Pause' },
-            { action: 'next', title: 'Next Song' }
-        ]
+        actions: [{
+            action: audio.paused ? 'play' : 'pause',
+            title: audio.paused ? 'Play' : 'Pause',
+            icon: `static/images/${audio.paused ? 'play' : 'pause'}-dark.png`
+        }, {
+            action: 'next',
+            title: 'Next Song',
+            icon: 'static/images/next-dark.png'
+        }]
     };
     registration.showNotification(title, options);
 }
