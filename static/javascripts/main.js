@@ -99,7 +99,7 @@ canvasCtx.lineCap = 'round';
 (function visualize() {
     requestAnimationFrame(visualize);
     if (audio.paused) {
-        return null;
+        return undefined;
     }
 
     analyser.getFloatTimeDomainData(audioData);
@@ -117,4 +117,54 @@ canvasCtx.lineCap = 'round';
     }
 
     canvasCtx.stroke();
+    notify();
 })();
+
+
+
+// Notifications Integration
+// Using `var` here so that the variables get hoisted.
+var registration;
+var notificationsGranted = false;
+
+navigator.permissions.query({ name: 'notifications' }).then((status) => {
+    function handlePermissionStatus() {
+        if (status.state === 'granted') {
+            notificationsGranted = true;
+        } else if (status.state === 'prompt') {
+            Notification.requestPermission();
+        }
+    }
+    status.onchange = handlePermissionStatus;
+    handlePermissionStatus();
+});
+
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').then((r) => registration = r);
+}
+
+function notify() {
+    if (!notificationsGranted || !registration) {
+        return undefined;
+    }
+    const data = playlist[index];
+    const title = data.title;
+    const currentTime = formatTime(audio.currentTime);
+    const options = {
+        body: `[${currentTime}] ${data.artist}`,
+        icon: canvas.toDataURL('image/png'),
+        requireInteraction: true,
+        tag: 'notification-audio-player'
+    };
+    registration.showNotification(title, options);
+}
+
+function formatTime(time) {
+    const minutes = Math.floor(time / 60);
+    const seconds = padLeft(Math.floor(time % 60));
+    return `${minutes}:${seconds}`;
+}
+
+function padLeft(value) {
+    return value < 10 ? '0' + value : value;
+}
