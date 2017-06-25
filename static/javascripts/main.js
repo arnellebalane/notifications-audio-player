@@ -28,10 +28,12 @@ const actions = {
             audio.src = playlist[index].src;
             audio.play();
             updateInterface(playlist[index]);
+            notify();
         }
     },
     pause() {
         audio.pause();
+        notify();
     },
     next() {
         index = (index + 1) % playlist.length;
@@ -153,6 +155,11 @@ if ('serviceWorker' in navigator) {
     fakeCanvasCtx = fakeCanvas.getContext('2d');
 }
 
+if ('BroadcastChannel' in window) {
+    const channel = new BroadcastChannel('notifications-audio-player');
+    channel.onmessage = (e) => actions[e.data]();
+}
+
 function notify() {
     if (!notificationsGranted || !registration) {
         return undefined;
@@ -164,7 +171,11 @@ function notify() {
         body: `(${currentTime}) ${data.artist}`,
         icon: getNotificationIcon(),
         requireInteraction: true,
-        tag: 'notification-audio-player'
+        tag: 'notifications-audio-player',
+        actions: [
+            { action: audio.paused ? 'play' : 'pause', title: audio.paused ? 'Play' : 'Pause' },
+            { action: 'next', title: 'Next Song' }
+        ]
     };
     registration.showNotification(title, options);
 }
