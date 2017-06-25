@@ -98,8 +98,10 @@ canvasCtx.strokeStyle = '#ad1457';
 canvasCtx.lineWidth = 3;
 canvasCtx.lineCap = 'round';
 
-(function visualize() {
-    requestAnimationFrame(visualize);
+function visualize(raf=true) {
+    if (raf) {
+        requestAnimationFrame(visualize);
+    }
     if (audio.paused) {
         return undefined;
     }
@@ -120,7 +122,8 @@ canvasCtx.lineCap = 'round';
 
     canvasCtx.stroke();
     notify();
-})();
+}
+visualize();
 
 
 
@@ -159,6 +162,17 @@ if ('BroadcastChannel' in window) {
     const channel = new BroadcastChannel('notifications-audio-player');
     channel.onmessage = (e) => actions[e.data]();
 }
+
+// If the document is not visible, requestAnimationFrame does not fire and so
+// the visualization does not update. When this happens, we switch to using
+// the `timeupdate` event to control rendering.
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+        audio.ontimeupdate = () => visualize(false);
+    } else {
+        audio.ontimeupdate = null;
+    }
+});
 
 function notify() {
     if (!notificationsGranted || !registration) {
